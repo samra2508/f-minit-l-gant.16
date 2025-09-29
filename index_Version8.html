@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>طلب منتج</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Tahoma, Arial, sans-serif;
+      background: url('bg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+    }
+    .form-container {
+      background: rgba(255,255,255,0.85);
+      max-width: 350px;
+      margin: 50px auto;
+      padding: 24px 20px;
+      border-radius: 16px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.13);
+      direction: rtl;
+    }
+    label {
+      font-size: 1.1em;
+      margin-top: 12px;
+      display: block;
+    }
+    input[type="text"], input[type="tel"], select {
+      width: 100%;
+      padding: 7px;
+      margin-top: 3px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 1em;
+      margin-bottom: 10px;
+    }
+    .sizes {
+      margin-bottom: 10px;
+    }
+    .sizes label {
+      display: inline-block;
+      margin-right: 10px;
+      font-size: 1em;
+    }
+    button {
+      padding: 10px 24px;
+      background: #b99aa1;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 1.1em;
+      margin-top: 8px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background: #a07783;
+    }
+    .success-message {
+      color: green;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 18px;
+    }
+    .error-message {
+      color: red;
+      font-weight: bold;
+      text-align: center;
+      margin-top: 18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2 style="text-align:center;">نموذج طلب منتج</h2>
+    <form id="orderForm">
+      <label for="name">الاسم واللقب</label>
+      <input type="text" id="name" required>
+      
+      <label for="phone">رقم الهاتف</label>
+      <input type="tel" id="phone" required pattern="^0[5-7][0-9]{8}$">
+      
+      <label for="state">ولاية السكن</label>
+      <input type="text" id="state" required>
+      
+      <label for="product">اسم المنتج</label>
+      <input type="text" id="product" required>
+      
+      <label>المقاسات (يمكن اختيار أكثر من مقاس)</label>
+      <div class="sizes">
+        <label><input type="checkbox" name="size" value="38"> 38</label>
+        <label><input type="checkbox" name="size" value="40"> 40</label>
+        <label><input type="checkbox" name="size" value="42"> 42</label>
+        <label><input type="checkbox" name="size" value="44"> 44</label>
+      </div>
+      <button type="submit">إرسال الطلب إلى واتساب</button>
+    </form>
+    <div id="msg"></div>
+  </div>
+  <script>
+    document.getElementById('orderForm').onsubmit = function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const state = document.getElementById('state').value.trim();
+      const product = document.getElementById('product').value.trim();
+      const sizes = Array.from(document.querySelectorAll('input[name="size"]:checked')).map(cb => cb.value).join(', ');
+
+      // رقم الواتساب مع كود الدولة الجزائرية (213)
+      const whatsappNumber = "213557504551";
+
+      let message =
+        `طلب جديد:%0A` +
+        `الاسم واللقب: ${name}%0A` +
+        `رقم الهاتف: ${phone}%0A` +
+        `الولاية: ${state}%0A` +
+        `اسم المنتج: ${product}%0A` +
+        `المقاس(ات): ${sizes ? sizes : "لم يتم اختيار مقاس"}`;
+
+      let url = `https://wa.me/${whatsappNumber}?text=${message}`;
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>
